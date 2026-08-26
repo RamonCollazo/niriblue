@@ -35,14 +35,17 @@ After that, each new build is picked up with `sudo bootc upgrade` in the VM.
 - [x] Step 2: layer the current host package set (see `recipes/recipe.yml`)
 - [x] Step 3: VM validation (2026-08-26): image boots via bootc, packages
       present, sddm greeter and niri session confirmed working (see test/)
-- [ ] Step 4: greeter swap (greetd + tuigreet or regreet, disable sddm)
-- [ ] Step 5: terminal decision (ghostty vs wezterm image rendering)
-- [ ] Step 6: gaming layer (steam flatpak, gamemode, mangohud, gamescope;
-      evaluate pulling the Bazzite kernel)
-- [ ] Step 7: virtualization stack (qemu-kvm, libvirt, virt-manager)
-- [ ] Step 8: VS Code + podman devcontainer defaults baked in
+- [x] Noctalia as default shell (niri config template patched, waybar removed
+      from the image); verified in VM 2026-08-26
+- [x] Gaming layer: gamemode, mangohud, gamescope RPMs plus Steam system
+      flatpak; verified in VM 2026-08-26. Bazzite kernel evaluation still open
+- [ ] Greeter swap (greetd + tuigreet or regreet, disable sddm); parked
+- [ ] Terminal decision (ghostty vs wezterm image rendering)
+- [ ] Virtualization stack (qemu-kvm, libvirt, virt-manager)
+- [ ] VS Code + podman devcontainer defaults baked in
       (dev.containers.dockerPath=podman, user podman.socket)
-- [ ] Step 9: trim (drop anything wayblue ships that goes unused, e.g. waybar)
+- [ ] Trim remaining wayblue extras noctalia replaces: fuzzel, wofi, rofi,
+      swaylock, swayidle, swaybg, kanshi (decision pending)
 - [ ] Later: decide host cutover from Bazzite
 
 ## Notes
