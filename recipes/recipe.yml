@@ -31,5 +31,14 @@ modules:
         - slurp
         - starship
         - tealdeer
+        - gamemode
+        - mangohud
+        - gamescope
+
+  - type: default-flatpaks
+    configurations:
+      - scope: system
+        install:
+          - com.valvesoftware.Steam
 
   - type: signing
