@@ -53,7 +53,9 @@ branches before merge.
       sddm for now
 - [ ] Kernel decision: stock Fedora vs OGC gaming kernel; xone and ryzen-smu
       akmods return with the OGC choice (deferred, kmods need matching kernel)
-- [ ] Terminal decision (ghostty vs wezterm image rendering)
+- [x] Terminal decision (2026-08-26): ghostty stays. A/B in the VM with
+      kitten icat showed wezterm renders no image via the kitty graphics
+      protocol (what image.nvim/yazi use) while ghostty supports it fully
 - [ ] Virtualization stack (qemu-kvm, libvirt, virt-manager)
 - [ ] VS Code + podman devcontainer defaults baked in
       (dev.containers.dockerPath=podman, user podman.socket)
