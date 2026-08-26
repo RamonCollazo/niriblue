@@ -58,7 +58,11 @@ branches before merge.
 - [x] Terminal decision (2026-08-26): ghostty stays. A/B in the VM with
       kitten icat showed wezterm renders no image via the kitty graphics
       protocol (what image.nvim/yazi use) while ghostty supports it fully
-- [ ] Virtualization stack (qemu-kvm, libvirt, virt-manager)
+- [x] Virtualization stack (2026-08-26, PR #4): qemu-kvm, libvirt,
+      virt-manager, virt-install, edk2-ovmf, swtpm, libvirtd enabled,
+      wheel polkit rule for libvirt management, ublue libvirt workarounds
+      (sysusers/tmpfiles/restorecon for atomic systems); verified in VM
+      including virsh system connection without group membership
 - [x] Devcontainer workflow (2026-08-26, PR #3): VS Code from the Microsoft
       repo, user podman.socket enabled; validated end to end in the VM with
       devpod CLI (docker provider, DOCKER_PATH=podman) building and running
