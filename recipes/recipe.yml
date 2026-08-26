@@ -65,6 +65,8 @@ modules:
         - ublue-os-udev-rules
         - uupd
         - gnome-keyring-pam
+
+  - type: dnf
     remove:
       packages:
         - waybar
