@@ -35,6 +35,10 @@ modules:
         - mangohud
         - gamescope
 
+  - type: script
+    scripts:
+      - noctalia-default.sh
+
   - type: default-flatpaks
     configurations:
       - scope: system
