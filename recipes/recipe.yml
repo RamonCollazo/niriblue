@@ -1,11 +1,16 @@
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 name: niriblue
-description: Custom niri image built on wayblue
+description: Custom niri image built on Fedora Atomic base
 
-base-image: ghcr.io/wayblueorg/niri
-image-version: latest
+base-image: quay.io/fedora-ostree-desktops/base-atomic
+image-version: 44
 
 modules:
+  - type: files
+    files:
+      - source: system
+        destination: /
+
   - type: dnf
     repos:
       copr:
@@ -13,6 +18,9 @@ modules:
         - scottames/ghostty
         - dejan/lazygit
         - peterwu/rendezvous
+        - ublue-os/packages
+      files:
+        - https://negativo17.org/repos/fedora-multimedia.repo
     install:
       packages:
         - alacritty
@@ -31,21 +39,53 @@ modules:
         - slurp
         - starship
         - tealdeer
+        - niri
+        - xwayland-satellite
+        - mate-polkit
+        - xdg-desktop-portal-gtk
+        - xdg-desktop-portal-gnome
+        - sddm
+        - sddm-themes
+        - qt5-qtgraphicaleffects
+        - qt5-qtquickcontrols2
+        - qt5-qtsvg
+        - kwallet
+        - pam-kwallet
+        - pipewire
+        - wireplumber
+        - pipewire-pulseaudio
+        - bluez
+        - default-fonts-core-sans
+        - google-noto-emoji-fonts
+        - ffmpeg
+        - libva-utils
         - gamemode
         - mangohud
         - gamescope
-    remove:
-      packages:
-        - waybar
+        - ublue-os-udev-rules
+        - uupd
+
+  - type: akmods
+    install:
+      - xone
+      - ryzen-smu
 
   - type: script
     scripts:
       - noctalia-default.sh
+      - sddm-theming.sh
 
   - type: default-flatpaks
     configurations:
       - scope: system
         install:
           - com.valvesoftware.Steam
+
+  - type: systemd
+    system:
+      enabled:
+        - sddm.service
+        - sddm-boot.service
+        - uupd.timer
 
   - type: signing
