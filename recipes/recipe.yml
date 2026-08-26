@@ -85,7 +85,6 @@ modules:
     base: ogc
     install:
       - xone
-      - ryzen-smu
 
   - type: script
     scripts:
