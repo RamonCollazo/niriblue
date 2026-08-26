@@ -33,7 +33,8 @@ After that, each new build is picked up with `sudo bootc upgrade` in the VM.
 
 - [x] Step 1: identity image (wayblue niri base + signing, no changes)
 - [x] Step 2: layer the current host package set (see `recipes/recipe.yml`)
-- [ ] Step 3: VM validation of the niri session (noctalia instead of waybar)
+- [x] Step 3: VM validation (2026-08-26): image boots via bootc, packages
+      present, sddm greeter and niri session confirmed working (see test/)
 - [ ] Step 4: greeter swap (greetd + tuigreet or regreet, disable sddm)
 - [ ] Step 5: terminal decision (ghostty vs wezterm image rendering)
 - [ ] Step 6: gaming layer (steam flatpak, gamemode, mangohud, gamescope;
