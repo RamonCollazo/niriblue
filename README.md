@@ -51,8 +51,10 @@ branches before merge.
       VM including sddm wayland greeter and keyring unlock fix
 - [ ] Greeter swap (greetd + tuigreet or regreet, disable sddm); parked,
       sddm for now
-- [ ] Kernel decision: stock Fedora vs OGC gaming kernel; xone and ryzen-smu
-      akmods return with the OGC choice (deferred, kmods need matching kernel)
+- [x] Kernel decision (2026-08-26, PR #2): OGC gaming kernel adopted; kernel
+      rpms and xone kmods both from ghcr.io/ublue-os/akmods:ogc-44, verified
+      booting in VM with xone_gip_gamepad loading. ryzen-smu deferred (lives
+      in akmods-extra)
 - [x] Terminal decision (2026-08-26): ghostty stays. A/B in the VM with
       kitten icat showed wezterm renders no image via the kitty graphics
       protocol (what image.nvim/yazi use) while ghostty supports it fully
