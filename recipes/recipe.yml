@@ -64,6 +64,9 @@ modules:
         - gamescope
         - ublue-os-udev-rules
         - uupd
+    remove:
+      packages:
+        - waybar
 
   - type: script
     scripts:
