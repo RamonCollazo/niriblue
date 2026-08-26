@@ -1,0 +1,11 @@
+[Unit]
+Description=Create SDDM user on system boot
+Before=sddm.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/etc/sddm/sddm-useradd
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
