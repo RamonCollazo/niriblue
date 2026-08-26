@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+name: niriblue
+description: Custom niri image built on wayblue
+
+base-image: ghcr.io/wayblueorg/niri
+image-version: latest
+
+modules:
+  - type: signing
