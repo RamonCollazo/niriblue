@@ -65,6 +65,7 @@ modules:
         - ublue-os-udev-rules
         - uupd
         - gnome-keyring-pam
+        - code
 
   - type: dnf
     remove:
@@ -104,5 +105,8 @@ modules:
         - sddm.service
         - sddm-boot.service
         - uupd.timer
+    user:
+      enabled:
+        - podman.socket
 
   - type: signing
