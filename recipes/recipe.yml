@@ -64,6 +64,7 @@ modules:
         - gamescope
         - ublue-os-udev-rules
         - uupd
+        - gnome-keyring-pam
     remove:
       packages:
         - waybar
