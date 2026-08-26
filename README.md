@@ -59,8 +59,11 @@ branches before merge.
       kitten icat showed wezterm renders no image via the kitty graphics
       protocol (what image.nvim/yazi use) while ghostty supports it fully
 - [ ] Virtualization stack (qemu-kvm, libvirt, virt-manager)
-- [ ] VS Code + podman devcontainer defaults baked in
-      (dev.containers.dockerPath=podman, user podman.socket)
+- [x] Devcontainer workflow (2026-08-26, PR #3): VS Code from the Microsoft
+      repo, user podman.socket enabled; validated end to end in the VM with
+      devpod CLI (docker provider, DOCKER_PATH=podman) building and running
+      an alpine devcontainer. dev.containers settings and devpod CLI live in
+      chezmoi/brew, not the image
 - [ ] CI polish: Renovate digest-pinned base bumps, rechunking, SBOM,
       changelogs, ISO at cutover time
 - [ ] Later: decide host cutover from Bazzite
