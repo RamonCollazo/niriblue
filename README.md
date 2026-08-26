@@ -1,10 +1,14 @@
 # niriblue
 
-Custom Fedora Atomic image based on [wayblue niri](https://github.com/wayblueorg/wayblue),
-built with [BlueBuild](https://blue-build.org/). The host machine stays on Bazzite;
-this image is built up incrementally and tested in a VM until it is ready.
+Custom Fedora Atomic niri image built with [BlueBuild](https://blue-build.org/)
+on the official `fedora-ostree-desktops/base-atomic` base, pinned to a Fedora
+version (Fedora major upgrades are a deliberate one-line bump of
+`image-version`). The host machine stays on Bazzite; this image is built up
+incrementally and tested in a VM until it is ready.
 
-Note: wayblue only publishes a `latest` tag, so this image tracks current Fedora.
+History: steps 1-3 were built on the wayblue niri base; the repo migrated to
+base-atomic in PR #1 (2026-08-26) to own the whole stack, drop the beta
+dependency, and shrink the image.
 
 ## Setup (one time)
 
@@ -26,8 +30,10 @@ rpm-ostree rebase ostree-image-signed:docker://ghcr.io/<owner>/niriblue:latest
 systemctl reboot
 ```
 
-The double rebase installs wayblue's sddm user provisioning and the signing policy.
+The double rebase installs the sddm user provisioning and the signing policy.
 After that, each new build is picked up with `sudo bootc upgrade` in the VM.
+PR builds publish as `ghcr.io/<owner>/niriblue:pr-<n>-<fedora>` for testing
+branches before merge.
 
 ## Roadmap
 
@@ -39,13 +45,20 @@ After that, each new build is picked up with `sudo bootc upgrade` in the VM.
       from the image); verified in VM 2026-08-26
 - [x] Gaming layer: gamemode, mangohud, gamescope RPMs plus Steam system
       flatpak; verified in VM 2026-08-26. Bazzite kernel evaluation still open
-- [ ] Greeter swap (greetd + tuigreet or regreet, disable sddm); parked
+- [x] Base migration to fedora-ostree-desktops/base-atomic (PR #1, 2026-08-26):
+      owns niri/portals/sddm, negativo17 ffmpeg + libva, ublue-os-udev-rules,
+      uupd auto-updates, gnome-keyring-pam, pipewire/bluez, fonts; verified in
+      VM including sddm wayland greeter and keyring unlock fix
+- [ ] Greeter swap (greetd + tuigreet or regreet, disable sddm); parked,
+      sddm for now
+- [ ] Kernel decision: stock Fedora vs OGC gaming kernel; xone and ryzen-smu
+      akmods return with the OGC choice (deferred, kmods need matching kernel)
 - [ ] Terminal decision (ghostty vs wezterm image rendering)
 - [ ] Virtualization stack (qemu-kvm, libvirt, virt-manager)
 - [ ] VS Code + podman devcontainer defaults baked in
       (dev.containers.dockerPath=podman, user podman.socket)
-- [ ] Trim remaining wayblue extras noctalia replaces: fuzzel, wofi, rofi,
-      swaylock, swayidle, swaybg, kanshi (decision pending)
+- [ ] CI polish: Renovate digest-pinned base bumps, rechunking, SBOM,
+      changelogs, ISO at cutover time
 - [ ] Later: decide host cutover from Bazzite
 
 ## Notes
