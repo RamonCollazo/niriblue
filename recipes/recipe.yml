@@ -6,4 +6,30 @@ base-image: ghcr.io/wayblueorg/niri
 image-version: latest
 
 modules:
+  - type: dnf
+    repos:
+      copr:
+        - atim/starship
+        - scottames/ghostty
+        - dejan/lazygit
+        - peterwu/rendezvous
+    install:
+      packages:
+        - alacritty
+        - bibata-cursor-themes
+        - cosmic-files
+        - cosmic-settings
+        - fd-find
+        - ghostty
+        - grim
+        - jetbrains-mono-fonts-all
+        - lazygit
+        - neovim
+        - noctalia
+        - pamixer
+        - podman-compose
+        - slurp
+        - starship
+        - tealdeer
+
   - type: signing
