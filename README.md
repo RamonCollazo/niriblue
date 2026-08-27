@@ -53,8 +53,9 @@ branches before merge.
       sddm for now
 - [x] Kernel decision (2026-08-26, PR #2): OGC gaming kernel adopted; kernel
       rpms and xone kmods both from ghcr.io/ublue-os/akmods:ogc-44, verified
-      booting in VM with xone_gip_gamepad loading. ryzen-smu deferred (lives
-      in akmods-extra)
+      booting in VM with xone_gip_gamepad loading. ryzen-smu added in PR #5
+      from akmods-extra (kmod plus common package); module load verified
+      in VM
 - [x] Terminal decision (2026-08-26): ghostty stays. A/B in the VM with
       kitten icat showed wezterm renders no image via the kitty graphics
       protocol (what image.nvim/yazi use) while ghostty supports it fully
