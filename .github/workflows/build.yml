@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   bluebuild:
     name: Build Custom Image
@@ -55,7 +55,7 @@ jobs:
   transparency:
     name: SBOM, Provenance, Changelog
     needs: [bluebuild, secureboot]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       packages: write
