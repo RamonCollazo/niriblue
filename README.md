@@ -76,8 +76,18 @@ branches before merge.
 - [x] Chunked OCI output (2026-08-27, PR #7): build_chunked_oci enabled;
       276 layers / 4.64 GB compressed became 129 layers / 3.61 GB, and
       updates now download only changed chunks; chunked image VM-verified
-- [ ] CI polish remaining: SBOM + provenance, release changelogs, ISO at
-      cutover time
+- [x] Build transparency (2026-08-27): SPDX SBOM (ucore's rootless export
+      pattern) cosign-attested to each published digest, GitHub build
+      provenance, and package-diff release notes per main publish (first
+      release: build-20260827-r54)
+- [x] Cutover prep (2026-08-27, PR #9): ublue-os-luks + tpm2-tools in the
+      image (TPM modules verified in the initramfs), workflow_dispatch ISO
+      build with the ublue secure boot key
+- [x] ISO validated end to end (2026-08-27): interactive install in a fresh
+      VM through Anaconda (Server variant; Silverblue variant hides user
+      creation), boots to sddm and a working niri + noctalia session.
+      Found and fixed: fresh users got bare niri until /etc/skel seeding
+      (niri generates configs from its compiled-in default)
 - [ ] Later: decide host cutover from Bazzite
 
 ## Notes
