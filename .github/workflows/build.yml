@@ -54,13 +54,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Resolve image digest
         id: img
-        run: |
-          IMAGE="ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/niriblue"
-          DIGEST=$(skopeo inspect --format '{{.Digest}}' "docker://${IMAGE}:latest")
-          echo "image=${IMAGE}" >> "$GITHUB_OUTPUT"
-          echo "digest=${DIGEST}" >> "$GITHUB_OUTPUT"
+        run: .github/scripts/resolve-image.sh
 
       - name: Install syft
         run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
@@ -84,26 +83,11 @@ jobs:
           push-to-registry: true
 
       - name: Extract package list
-        run: |
-          jq -r '.packages[] | select(.versionInfo != null) | "\(.name) \(.versionInfo)"' sbom.spdx.json | sort -u > pkgs.txt
-          wc -l pkgs.txt
+        run: .github/scripts/extract-packages.sh
 
       - name: Generate changelog and release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          TAG="build-$(date -u +%Y%m%d)-r${{ github.run_number }}"
-          PREV=$(gh release list --repo "${{ github.repository }}" --limit 1 --json tagName --jq '.[0].tagName' || true)
-          {
-            echo "Image: \`${{ steps.img.outputs.image }}@${{ steps.img.outputs.digest }}\`"
-            echo
-            if [ -n "$PREV" ] && gh release download "$PREV" --repo "${{ github.repository }}" --pattern pkgs.txt --output prev-pkgs.txt 2>/dev/null; then
-              echo "## Package changes since $PREV"
-              echo '```'
-              diff prev-pkgs.txt pkgs.txt | grep -E '^[<>]' | sed 's/^</removed:/; s/^>/added:  /' || echo "no package changes"
-              echo '```'
-            else
-              echo "First tracked release; package list attached."
-            fi
-          } > notes.md
-          gh release create "$TAG" --repo "${{ github.repository }}" --title "$TAG" --notes-file notes.md pkgs.txt sbom.spdx.json
+          IMAGE: ${{ steps.img.outputs.image }}
+          DIGEST: ${{ steps.img.outputs.digest }}
+        run: .github/scripts/changelog-release.sh
