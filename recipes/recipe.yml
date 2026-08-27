@@ -94,6 +94,11 @@ modules:
     install:
       - xone
 
+  - type: containerfile
+    snippets:
+      - COPY --from=ghcr.io/ublue-os/akmods-extra:ogc-44 /rpms /tmp/extra-rpms
+      - RUN dnf install -y /tmp/extra-rpms/kmods/kmod-ryzen-smu*.rpm && rm -rf /tmp/extra-rpms
+
   - type: script
     scripts:
       - noctalia-default.sh
