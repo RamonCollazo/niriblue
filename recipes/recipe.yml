@@ -3,7 +3,7 @@ name: niriblue
 description: Custom niri image built on Fedora Atomic base
 
 base-image: quay.io/fedora-ostree-desktops/base-atomic
-image-version: 44
+image-version: 44@sha256:0bac0e57543b1aaf406ff3bcdbde1c2f9ee511c180083b36a9ef8ae77ce8d77f
 
 modules:
   - type: files
@@ -81,22 +81,18 @@ modules:
 
   - type: containerfile
     snippets:
-      - COPY --from=ghcr.io/ublue-os/akmods:ogc-44 /rpms /tmp/rpms
-      - COPY --from=ghcr.io/ublue-os/akmods:ogc-44 /kernel-rpms /tmp/rpms/kernel
+      - COPY --from=ghcr.io/ublue-os/akmods:ogc-44@sha256:de4625d6e43962231c879bb7bee849202af99db402b81f7e48241815f5b9d550 /rpms /tmp/rpms
+      - COPY --from=ghcr.io/ublue-os/akmods:ogc-44@sha256:de4625d6e43962231c879bb7bee849202af99db402b81f7e48241815f5b9d550 /kernel-rpms /tmp/rpms/kernel
       - RUN dnf install -y /tmp/rpms/ublue-os/ublue-os-akmods-addons*.rpm
 
   - type: script
     scripts:
       - install-ogc-kernel.sh
 
-  - type: akmods
-    base: ogc
-    install:
-      - xone
-
   - type: containerfile
     snippets:
-      - COPY --from=ghcr.io/ublue-os/akmods-extra:ogc-44 /rpms /tmp/extra-rpms
+      - RUN dnf install -y /tmp/rpms/kmods/kmod-xone*.rpm && rm -rf /tmp/rpms
+      - COPY --from=ghcr.io/ublue-os/akmods-extra:ogc-44@sha256:3f670662f8a2a55a3b1963c45e2fd0fa31c27d5d9ca0cec087dc116dfc468e02 /rpms /tmp/extra-rpms
       - RUN dnf install -y /tmp/extra-rpms/kmods/kmod-ryzen_smu*.rpm /tmp/extra-rpms/extra/ryzen_smu-0*.rpm && rm -rf /tmp/extra-rpms
 
   - type: script
