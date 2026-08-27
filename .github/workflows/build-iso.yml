@@ -19,7 +19,7 @@ jobs:
           image_name: niriblue
           image_tag: latest
           version: 44
-          variant: Silverblue
+          variant: Server
           iso_name: niriblue-44.iso
           secure_boot_key_url: https://github.com/ublue-os/akmods/raw/main/certs/public_key.der
           enrollment_password: universalblue
