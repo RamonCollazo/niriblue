@@ -68,7 +68,10 @@ jobs:
         run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
 
       - name: Generate SBOM
-        run: syft scan "registry:${{ steps.img.outputs.image }}@${{ steps.img.outputs.digest }}" --select-catalogers rpm -o spdx-json=sbom.spdx.json
+        env:
+          IMAGE: ${{ steps.img.outputs.image }}
+          DIGEST: ${{ steps.img.outputs.digest }}
+        run: .github/scripts/generate-sbom.sh
 
       - name: Install cosign
         uses: sigstore/cosign-installer@v3
