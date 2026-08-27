@@ -63,6 +63,8 @@ modules:
         - mangohud
         - gamescope
         - ublue-os-udev-rules
+        - ublue-os-luks
+        - tpm2-tools
         - uupd
         - gnome-keyring-pam
         - code
