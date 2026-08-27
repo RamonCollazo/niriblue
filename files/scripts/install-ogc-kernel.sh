@@ -13,6 +13,7 @@ if [[ "$INCOMING_KERNEL_VERSION" != "$QUALIFIED_KERNEL" ]]; then
             rpm --erase $pkg --nodeps
         fi
     done
+    rm -rf "/usr/lib/modules/${QUALIFIED_KERNEL}"
     dnf -y install \
         /tmp/rpms/kernel/kernel-[0-9]*.rpm \
         /tmp/rpms/kernel/kernel-core-*.rpm \
