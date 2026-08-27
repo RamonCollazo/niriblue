@@ -33,3 +33,77 @@ jobs:
           pr_event_number: ${{ github.event.number }}
           maximize_build_space: true
           build_chunked_oci: true
+
+  transparency:
+    name: SBOM, Provenance, Changelog
+    needs: bluebuild
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      id-token: write
+      attestations: write
+      contents: write
+    env:
+      COSIGN_PASSWORD: ""
+    steps:
+      - name: Log in to ghcr
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Resolve image digest
+        id: img
+        run: |
+          IMAGE="ghcr.io/$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/niriblue"
+          DIGEST=$(skopeo inspect --format '{{.Digest}}' "docker://${IMAGE}:latest")
+          echo "image=${IMAGE}" >> "$GITHUB_OUTPUT"
+          echo "digest=${DIGEST}" >> "$GITHUB_OUTPUT"
+
+      - name: Install syft
+        run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Generate SBOM
+        run: syft scan "registry:${{ steps.img.outputs.image }}@${{ steps.img.outputs.digest }}" -o spdx-json=sbom.spdx.json
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Attest SBOM
+        env:
+          COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
+        run: cosign attest --yes --key env://COSIGN_PRIVATE_KEY --type spdxjson --predicate sbom.spdx.json "${{ steps.img.outputs.image }}@${{ steps.img.outputs.digest }}"
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-name: ${{ steps.img.outputs.image }}
+          subject-digest: ${{ steps.img.outputs.digest }}
+          push-to-registry: true
+
+      - name: Extract package list
+        run: |
+          jq -r '.packages[] | select(.versionInfo != null) | "\(.name) \(.versionInfo)"' sbom.spdx.json | sort -u > pkgs.txt
+          wc -l pkgs.txt
+
+      - name: Generate changelog and release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="build-$(date -u +%Y%m%d)-r${{ github.run_number }}"
+          PREV=$(gh release list --repo "${{ github.repository }}" --limit 1 --json tagName --jq '.[0].tagName' || true)
+          {
+            echo "Image: \`${{ steps.img.outputs.image }}@${{ steps.img.outputs.digest }}\`"
+            echo
+            if [ -n "$PREV" ] && gh release download "$PREV" --repo "${{ github.repository }}" --pattern pkgs.txt --output prev-pkgs.txt 2>/dev/null; then
+              echo "## Package changes since $PREV"
+              echo '```'
+              diff prev-pkgs.txt pkgs.txt | grep -E '^[<>]' | sed 's/^</removed:/; s/^>/added:  /' || echo "no package changes"
+              echo '```'
+            else
+              echo "First tracked release; package list attached."
+            fi
+          } > notes.md
+          gh release create "$TAG" --repo "${{ github.repository }}" --title "$TAG" --notes-file notes.md pkgs.txt sbom.spdx.json
