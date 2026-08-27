@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-sudo podman pull "${IMAGE}@${DIGEST}"
-CID=$(sudo podman create "${IMAGE}@${DIGEST}" /bin/true)
-MNT=$(sudo podman mount "$CID")
+WORK_DIR="$(mktemp -d)"
+ROOTFS="${WORK_DIR}/rootfs"
+CONTAINER="gen-sbom-${RANDOM}-${RANDOM}"
+trap 'podman container rm -f "${CONTAINER}" >/dev/null 2>&1 || true; rm -rf "${WORK_DIR}"' EXIT
 
-sudo /usr/local/bin/syft scan "dir:${MNT}" --select-catalogers rpm -o spdx-json=sbom.spdx.json
-sudo chown "$(id -u):$(id -g)" sbom.spdx.json
+podman pull "${IMAGE}@${DIGEST}"
+podman container create --name "${CONTAINER}" "${IMAGE}@${DIGEST}" >/dev/null
+mkdir -p "${ROOTFS}"
+podman export "${CONTAINER}" | tar --no-same-owner -C "${ROOTFS}" -xf -
 
-sudo podman unmount "$CID" >/dev/null
-sudo podman rm "$CID" >/dev/null
+export SYFT_PARALLELISM="${SYFT_PARALLELISM:-$(($(nproc) * 2))}"
+syft scan --source-name "${IMAGE}" "dir:${ROOTFS}" -o spdx-json=sbom.spdx.json
+du -sh sbom.spdx.json
