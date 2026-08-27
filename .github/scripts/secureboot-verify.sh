@@ -16,9 +16,14 @@ podman pull "${IMG}"
 CONTAINER=$(podman create "${IMG}" true)
 trap 'podman rm -f "${CONTAINER}" >/dev/null 2>&1 || true' EXIT
 
-KVER=$(podman run --rm "${IMG}" ls /usr/lib/modules)
-echo "Kernel: ${KVER}"
-podman cp "${CONTAINER}:/usr/lib/modules/${KVER}/vmlinuz" vmlinuz
+VMLINUZ=$(podman run --rm "${IMG}" sh -c 'ls /usr/lib/modules/*/vmlinuz')
+if [ "$(echo "${VMLINUZ}" | wc -l)" -ne 1 ]; then
+  echo "Expected exactly one kernel in the image, found:"
+  echo "${VMLINUZ}"
+  exit 1
+fi
+echo "Kernel image: ${VMLINUZ}"
+podman cp "${CONTAINER}:${VMLINUZ}" vmlinuz
 
 curl -fsSL -o key1.der https://github.com/ublue-os/akmods/raw/main/certs/public_key.der
 curl -fsSL -o key2.der https://github.com/ublue-os/akmods/raw/main/certs/public_key_2.der
