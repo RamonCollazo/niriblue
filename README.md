@@ -73,8 +73,11 @@ branches before merge.
       (base-atomic, akmods, akmods-extra); regex manager opens grouped weekly
       PRs on digest movement. Requires the Renovate GitHub App installed on
       the repo to activate
-- [ ] CI polish remaining: rechunking, SBOM + provenance, release
-      changelogs, ISO at cutover time
+- [x] Chunked OCI output (2026-08-27, PR #7): build_chunked_oci enabled;
+      276 layers / 4.64 GB compressed became 129 layers / 3.61 GB, and
+      updates now download only changed chunks; chunked image VM-verified
+- [ ] CI polish remaining: SBOM + provenance, release changelogs, ISO at
+      cutover time
 - [ ] Later: decide host cutover from Bazzite
 
 ## Notes
