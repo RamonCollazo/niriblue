@@ -42,3 +42,7 @@ User `ramon`, password `niriblue`, wheel group, root locked (set in ks.cfg).
 - The first boot after install provisions the sddm user (wayblue behavior);
   the greeter appears from the second boot onward.
 - The guest may inherit the host's hostname via passt DHCP; cosmetic.
+- The VM disk fills up after several image switches ("Insufficient free
+  space" from bootc switch). Reclaim with `sudo rpm-ostree cleanup -bpr`
+  (drops rollback deployments and prunes the ostree repo) plus
+  `podman system prune -af` for test containers.
