@@ -1,0 +1,36 @@
+name: build-iso
+on:
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build-iso:
+    name: Build Installer ISO
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Build ISO
+        uses: JasonN3/build-container-installer@v1
+        id: build
+        with:
+          image_repo: ghcr.io/ramoncollazo
+          image_name: niriblue
+          image_tag: latest
+          version: 44
+          variant: Silverblue
+          iso_name: niriblue-44.iso
+          secure_boot_key_url: https://github.com/ublue-os/akmods/raw/main/certs/public_key.der
+          enrollment_password: universalblue
+
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: niriblue-44-iso
+          path: |
+            ${{ steps.build.outputs.iso_path }}
+            ${{ steps.build.outputs.iso_path }}-CHECKSUM
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0
