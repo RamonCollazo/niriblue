@@ -61,6 +61,9 @@ jobs:
         id: img
         run: .github/scripts/resolve-image.sh
 
+      - name: Free runner disk
+        run: .github/scripts/free-runner-disk.sh
+
       - name: Install syft
         run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
 
