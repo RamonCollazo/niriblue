@@ -120,4 +120,8 @@ modules:
       enabled:
         - podman.socket
 
+  - type: containerfile
+    snippets:
+      - RUN bootc container lint
+
   - type: signing

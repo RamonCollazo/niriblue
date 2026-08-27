@@ -34,9 +34,27 @@ jobs:
           maximize_build_space: true
           build_chunked_oci: true
 
+  secureboot:
+    name: Secure Boot Check
+    needs: bluebuild
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install sbsigntool
+        run: sudo apt-get update && sudo apt-get install -y sbsigntool
+
+      - name: Verify kernel signature
+        env:
+          PR_NUMBER: ${{ github.event.number }}
+        run: .github/scripts/secureboot-verify.sh
+
   transparency:
     name: SBOM, Provenance, Changelog
-    needs: bluebuild
+    needs: [bluebuild, secureboot]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
@@ -65,7 +83,7 @@ jobs:
         run: .github/scripts/free-runner-disk.sh
 
       - name: Install syft
-        run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+        run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin v1.39.0
 
       - name: Generate SBOM
         env:

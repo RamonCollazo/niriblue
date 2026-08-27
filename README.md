@@ -88,6 +88,14 @@ branches before merge.
       creation), boots to sddm and a working niri + noctalia session.
       Found and fixed: fresh users got bare niri until /etc/skel seeding
       (niri generates configs from its compiled-in default)
+- [x] CI hardening from the uBlue comparison (2026-08-27, PR #10):
+      bootc container lint as the last build layer, secure boot verification
+      of the shipped kernel against the ublue akmods certs on every build,
+      weekly GHCR cleanup of old images, Renovate config:best-practices
+      (digest-pins GitHub Actions too), syft pinned to v1.39.0
+- [ ] Later: titanoboa live ISO (uBlue's own installer builder, replaced
+      JasonN3/build-container-installer in Bluefin); not a must have, revisit
+      if the JasonN3 action stagnates
 - [ ] Later: decide host cutover from Bazzite
 
 ## Notes
