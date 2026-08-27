@@ -79,7 +79,7 @@ jobs:
       - name: Attest SBOM
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.SIGNING_SECRET }}
-        run: cosign attest --yes --key env://COSIGN_PRIVATE_KEY --type spdxjson --predicate sbom.spdx.json "${{ steps.img.outputs.image }}@${{ steps.img.outputs.digest }}"
+        run: cosign attest --yes --tlog-upload=false --key env://COSIGN_PRIVATE_KEY --type spdxjson --predicate sbom.spdx.json "${{ steps.img.outputs.image }}@${{ steps.img.outputs.digest }}"
 
       - name: Attest build provenance
         uses: actions/attest-build-provenance@v3
