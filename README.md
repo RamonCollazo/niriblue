@@ -69,7 +69,11 @@ branches before merge.
       devpod CLI (docker provider, DOCKER_PATH=podman) building and running
       an alpine devcontainer. dev.containers settings and devpod CLI live in
       chezmoi/brew, not the image
-- [ ] CI polish: Renovate digest-pinned base bumps, rechunking, SBOM,
+- [x] Renovate (2026-08-27, PR #6): all upstream image refs digest-pinned
+      (base-atomic, akmods, akmods-extra); regex manager opens grouped weekly
+      PRs on digest movement. Requires the Renovate GitHub App installed on
+      the repo to activate
+- [ ] CI polish remaining: rechunking, SBOM + provenance, release
       changelogs, ISO at cutover time
 - [ ] Later: decide host cutover from Bazzite
 
