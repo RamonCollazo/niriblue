@@ -60,7 +60,8 @@ branches before merge.
       kitten icat showed wezterm renders no image via the kitty graphics
       protocol (what image.nvim/yazi use) while ghostty supports it fully
 - [x] Virtualization stack (2026-08-26, PR #4): qemu-kvm, libvirt,
-      virt-manager, virt-install, edk2-ovmf, swtpm, libvirtd enabled,
+      virt-manager, virt-install, edk2-ovmf, swtpm, modular libvirt
+      daemons (Fedora preset; legacy libvirtd dropped in PR #10),
       wheel polkit rule for libvirt management, ublue libvirt workarounds
       (sysusers/tmpfiles/restorecon for atomic systems); verified in VM
       including virsh system connection without group membership
